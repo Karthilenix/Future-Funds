@@ -62,14 +62,14 @@ const Home = () => {
           {!isAuthenticated && (
             <Link
               to="/register"
-              className="px-8 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105"
+              className="px-8 py-3 bg-blue-600 text-black-800 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105"
             >
               Get Started
             </Link>
           )}
           <Link
             to="/stocks"
-            className="px-8 py-3 bg-blue-700 text-black-800 rounded-lg hover:bg-blue-400 transition-all transform hover:scale-105"
+            className="px-8 py-3 bg-blue-600 text-black-800 rounded-lg hover:bg-blue-700 transition-all transform hover:scale-105"
           >
             View Stocks
           </Link>

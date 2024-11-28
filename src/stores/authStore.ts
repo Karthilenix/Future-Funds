@@ -21,7 +21,7 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       login: async (email: string, password: string) => {
         try {
-          const response = await fetch('http://localhost:5000/api/auth/login', {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -29,25 +29,16 @@ export const useAuthStore = create<AuthState>()(
             body: JSON.stringify({ email, password }),
           });
 
-          const data = await response.json();
-          
           if (!response.ok) {
-            throw new Error(data.message || 'Login failed');
+            const error = await response.json();
+            throw new Error(error.message || 'Login failed');
           }
 
-          set({
-            token: data.token,
-            user: {
-              email: data.user.email,
-              username: data.user.username,
-              _id: data.user._id
-            },
-            isAuthenticated: true
-          });
-
+          const data = await response.json();
+          set({ user: data.user, token: data.token, isAuthenticated: true });
           localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
         } catch (error) {
-          console.error('Login error:', error);
           throw error;
         }
       },

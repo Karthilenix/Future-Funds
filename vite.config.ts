@@ -6,8 +6,9 @@ export default defineConfig(({ mode }) => {
   const env = loadEnv(mode, process.cwd(), '');
   return {
     plugins: [react()],
-    root: path.resolve(__dirname, 'public'),
-    publicDir: path.resolve(__dirname, 'public'),
+    server: {
+      port: 3000
+    },
     build: {
       outDir: path.resolve(__dirname, 'dist'),
       sourcemap: true,

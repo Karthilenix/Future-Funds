@@ -33,4 +33,4 @@ if (!mongoose.connections[0].readyState) {
 }
 
 // Export the Express API
-module.exports = app;
+export default app;

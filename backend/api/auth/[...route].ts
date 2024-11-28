@@ -2,12 +2,21 @@ import { VercelRequest, VercelResponse } from '@vercel/node';
 import { config, handleError } from '../config';
 import jwt from 'jsonwebtoken';
 import bcrypt from 'bcryptjs';
+import mongoose from 'mongoose';
 import User from '../../src/models/User';
 
 export { config };
 
+// Connect to MongoDB
+const connectDB = async () => {
+    if (mongoose.connections[0].readyState) return;
+    await mongoose.connect(process.env.MONGODB_URI!);
+};
+
 export default async function handler(req: VercelRequest, res: VercelResponse) {
     try {
+        await connectDB();
+
         if (req.method === 'POST') {
             if (req.url?.includes('/login')) {
                 const { email, password } = req.body;

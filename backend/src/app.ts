@@ -6,8 +6,30 @@ import stockRoutes from './routes/stocks';
 
 const app = express();
 
+// Define allowed origins
+const allowedOrigins = [
+    'http://localhost:3000',                    // Local development
+    'https://future-funds.vercel.app',          // Your production domain
+    'https://future-funds-git-main.vercel.app', // Vercel preview deployments
+    'https://future-funds-*.vercel.app'         // Vercel preview deployments
+];
+
+// Configure CORS
 app.use(cors({
-    origin: '*',
+    origin: (origin, callback) => {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) return callback(null, true);
+
+        if (allowedOrigins.some(allowedOrigin => {
+            // Check if the origin matches exactly or matches the wildcard pattern
+            return origin === allowedOrigin ||
+                (allowedOrigin.includes('*') && origin.match(allowedOrigin.replace('*', '.*')));
+        })) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
+        }
+    },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));

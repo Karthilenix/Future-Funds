@@ -1,5 +1,6 @@
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
+import api from '../utils/axios';
 
 export interface Stock {
   symbol: string;
@@ -227,18 +228,7 @@ export const useStockStore = create<StockState>()(
         try {
           set({ loading: true, error: null });
           
-          const response = await fetch('http://localhost:5000/api/stocks', {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            }
-          });
-
-          if (!response.ok) {
-            throw new Error('Failed to fetch stocks');
-          }
-          
-          const data = await response.json();
+          const { data } = await api.get<Stock[]>('/stocks');
           set({ stocks: data, loading: false });
         } catch (error) {
           console.error('Error fetching stocks:', error);
@@ -246,7 +236,7 @@ export const useStockStore = create<StockState>()(
           set({ 
             stocks: sampleStocks,
             loading: false,
-            error: null // Don't show error when falling back to sample data
+            error: null
           });
         }
       },
@@ -335,7 +325,7 @@ export const useStockStore = create<StockState>()(
               };
             }
             return stock;
-          }).filter(Boolean); // Remove null entries
+          }).filter(Boolean) as UserStock[]; // Cast filtered array to UserStock[]
 
           // Calculate the sale amount
           const saleAmount = stockToSell.price * shares;
@@ -346,24 +336,13 @@ export const useStockStore = create<StockState>()(
           }));
 
           // Try to update the backend
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/stocks/sell`, {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${localStorage.getItem('token')}`
-            },
-            body: JSON.stringify({
-              symbol,
-              shares,
-              price: stockToSell.price
-            })
+          await api.post('/stocks/sell', {
+            symbol,
+            shares,
+            price: stockToSell.price
           });
 
-          if (!response.ok) {
-            throw new Error('Failed to sell stock');
-          }
-
-          return updatedStocks as UserStock[];
+          return updatedStocks;
         } catch (error) {
           console.error('Error selling stock:', error);
           throw error;

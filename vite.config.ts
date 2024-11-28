@@ -7,15 +7,19 @@ export default defineConfig(({ mode }) => {
   return {
     plugins: [react()],
     server: {
-      port: 3000
+      port: 3000,
+      proxy: {
+        '/api': {
+          target: process.env.VITE_API_URL || 'http://localhost:5000',
+          changeOrigin: true,
+          secure: false
+        }
+      }
     },
     build: {
       outDir: path.resolve(__dirname, 'dist'),
       sourcemap: true,
       emptyOutDir: true
-    },
-    define: {
-      'process.env.VITE_API_URL': JSON.stringify(env.VITE_API_URL)
     }
   };
 });

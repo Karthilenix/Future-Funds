@@ -7,8 +7,12 @@ import stockRoutes from './routes/stocks';
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:3000',
-    credentials: true
+    origin: [
+        'https://future-funds.vercel.app',
+        'http://localhost:3000'
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
 }));
 app.use(express.json());
 

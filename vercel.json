@@ -10,6 +10,8 @@
         }
     ],
     "env": {
-        "VITE_API_URL": "https://future-funds-backend.vercel.app/api"
+        "NODE_ENV": "production",
+        "MONGODB_URI": "@mongodb-uri",
+        "JWT_SECRET": "@jwt-secret"
     }
 }

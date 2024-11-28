@@ -1,5 +1,5 @@
 import { useEffect } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useStockStore } from '../stores/stockStore';
 import { TrendingUp, TrendingDown } from 'lucide-react';
 import { useAuthStore } from '../stores/authStore';

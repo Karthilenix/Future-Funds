@@ -6,10 +6,8 @@
   "scripts": {
     "dev": "vite --port 3000",
     "build": "tsc && vite build",
-    "vercel-build": "npm run build",
     "preview": "vite preview",
-    "start": "vite --port 3000",
-    "deploy": "vercel --prod"
+    "start": "vite --port 3000"
   },
   "dependencies": {
     "@types/axios": "^0.9.36",

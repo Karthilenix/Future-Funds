@@ -1,17 +1,20 @@
 {
     "version": 2,
-    "buildCommand": "npm run build",
-    "outputDirectory": "dist",
-    "framework": "vite",
-    "rewrites": [
+    "builds": [
         {
-            "source": "/(.*)",
-            "destination": "/index.html"
+            "src": "api/index.ts",
+            "use": "@vercel/node"
+        }
+    ],
+    "routes": [
+        {
+            "src": "/api/(.*)",
+            "dest": "api/index.ts"
         }
     ],
     "env": {
         "NODE_ENV": "production",
-        "MONGODB_URI": "@mongodb-uri",
-        "JWT_SECRET": "@jwt-secret"
+        "MONGODB_URI": "mongodb+srv://kk2525karthi:karthi2512@cluster2525.fcbco.mongodb.net/?retryWrites=true&w=majority&appName=Cluster2525",
+        "JWT_SECRET": "karthiqwert2525"
     }
 }

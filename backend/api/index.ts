@@ -11,13 +11,13 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: process.env.FRONTEND_URL || '*',
+    origin: '*',
     credentials: true
 }));
 app.use(express.json());
 
 // Health check endpoint
-app.get('/api/health', (req, res) => {
+app.get('/api', (req, res) => {
     res.json({ status: 'ok' });
 });
 
@@ -25,9 +25,12 @@ app.get('/api/health', (req, res) => {
 app.use('/api/auth', authRoutes);
 app.use('/api/stocks', stockRoutes);
 
-// Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI!)
-    .then(() => console.log('Connected to MongoDB'))
-    .catch((err) => console.error('MongoDB connection error:', err));
+// Connect to MongoDB only if not already connected
+if (!mongoose.connections[0].readyState) {
+    mongoose.connect(process.env.MONGODB_URI!)
+        .then(() => console.log('Connected to MongoDB'))
+        .catch((err) => console.error('MongoDB connection error:', err));
+}
 
-export default app;
+// Export the Express API
+module.exports = app;

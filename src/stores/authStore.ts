@@ -14,7 +14,7 @@ interface AuthState {
   logout: () => void;
 }
 
-const API_URL = process.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000';
 console.log('Current API URL:', API_URL); // Debug log
 
 export const useAuthStore = create<AuthState>()(

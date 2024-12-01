@@ -14,8 +14,7 @@
         "paths": {
             "*": ["node_modules/*"]
         },
-        "typeRoots": ["./node_modules/@types"],
-        "types": ["node", "express", "cors", "jsonwebtoken", "bcryptjs"]
+        "typeRoots": ["./node_modules/@types"]
     },
     "include": ["src/**/*", "api/**/*"],
     "exclude": ["node_modules"]

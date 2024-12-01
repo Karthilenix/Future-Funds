@@ -3,6 +3,9 @@ import mongoose from 'mongoose';
 import cors from 'cors';
 import authRoutes from './routes/auth';
 import stockRoutes from './routes/stocks';
+import { Request, Response } from 'express';
+
+declare module '@vercel/node';
 
 const app = express();
 
@@ -38,7 +41,7 @@ app.use(express.json());
 app.use('/api/auth', authRoutes);
 app.use('/api/stocks', stockRoutes);
 
-app.get('/', (req, res) => {
+app.get('/', async (req: Request, res: Response) => {
     res.json({ message: 'API is running' });
 });
 

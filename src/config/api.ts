@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-    baseURL: import.meta.env.VITE_API_URL || 'https://futurefunds.vercel.app/api',
+    baseURL: import.meta.env.VITE_API_URL || 'https://futurefunds.vercel.app',
     endpoints: {
         auth: {
             login: '/auth/login',

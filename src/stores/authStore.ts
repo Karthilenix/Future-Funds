@@ -14,8 +14,8 @@ interface AuthState {
   logout: () => void;
 }
 
-// Define the API URL with a fallback
-const API_URL = import.meta.env.VITE_API_URL || 'https://future-funds-backend.onrender.com';
+const API_URL = process.env.VITE_API_URL;
+console.log('Current API URL:', API_URL); // Debug log
 
 export const useAuthStore = create<AuthState>()(
   persist(

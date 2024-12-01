@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { Request, Response } from 'express';
 import { auth } from '../middleware/auth';
 
 const router = express.Router();
@@ -30,7 +30,7 @@ const sampleStocks = [
 ];
 
 // Get all stocks
-router.get('/', async (req, res) => {
+router.get('/', async (req: Request, res: Response) => {
     try {
         // For now, return sample data
         // In a real app, you would fetch this from a database

@@ -18,12 +18,10 @@ const allowedOrigins = [
 
 // Configure CORS
 app.use(cors({
-    origin: (origin, callback) => {
-        // Allow requests with no origin (like mobile apps or curl requests)
+    origin: (origin: string | undefined, callback: (err: Error | null, allow?: boolean) => void) => {
         if (!origin) return callback(null, true);
 
         if (allowedOrigins.some(allowedOrigin => {
-            // Check if the origin matches exactly or matches the wildcard pattern
             return origin === allowedOrigin ||
                 (allowedOrigin.includes('*') && origin.match(allowedOrigin.replace('*', '.*')));
         })) {

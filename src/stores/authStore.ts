@@ -14,6 +14,9 @@ interface AuthState {
   logout: () => void;
 }
 
+// Define the API URL with a fallback
+const API_URL = import.meta.env.VITE_API_URL || 'https://future-funds-backend.onrender.com';
+
 export const useAuthStore = create<AuthState>()(
   persist(
     (set) => ({
@@ -21,8 +24,10 @@ export const useAuthStore = create<AuthState>()(
       user: null,
       isAuthenticated: false,
       login: async (email: string, password: string) => {
+        console.log('Attempting login with API URL:', API_URL);
+        
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
+          const response = await fetch(`${API_URL}/api/auth/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -31,23 +36,32 @@ export const useAuthStore = create<AuthState>()(
             body: JSON.stringify({ email, password }),
           });
 
+          console.log('Login response status:', response.status);
+          
+          const data = await response.json();
+          console.log('Login response data:', data);
+
           if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Login failed');
+            throw new Error(data.message || 'Login failed');
           }
 
-          const data = await response.json();
           set({ user: data.user, token: data.token, isAuthenticated: true });
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
         } catch (error) {
-          console.error('Login error:', error);
+          console.error('Login error details:', {
+            error,
+            message: error instanceof Error ? error.message : 'Unknown error',
+            apiUrl: API_URL
+          });
           throw error;
         }
       },
       register: async (username: string, email: string, password: string) => {
+        console.log('Attempting registration with API URL:', API_URL);
+        
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+          const response = await fetch(`${API_URL}/api/auth/register`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
@@ -56,17 +70,24 @@ export const useAuthStore = create<AuthState>()(
             body: JSON.stringify({ username, email, password }),
           });
 
+          console.log('Register response status:', response.status);
+          
+          const data = await response.json();
+          console.log('Register response data:', data);
+
           if (!response.ok) {
-            const errorData = await response.json();
-            throw new Error(errorData.message || 'Registration failed');
+            throw new Error(data.message || 'Registration failed');
           }
 
-          const data = await response.json();
           set({ user: data.user, token: data.token, isAuthenticated: true });
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
         } catch (error) {
-          console.error('Registration error:', error);
+          console.error('Registration error details:', {
+            error,
+            message: error instanceof Error ? error.message : 'Unknown error',
+            apiUrl: API_URL
+          });
           throw error;
         }
       },

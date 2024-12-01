@@ -8,37 +8,58 @@ dotenv.config();
 
 const app = express();
 
-// Middleware
-app.use(cors({
-    origin: function(origin, callback) {
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if(!origin) return callback(null, true);
+// Middleware for logging requests
+app.use((req, res, next) => {
+    console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    next();
+});
+
+// CORS configuration
+const corsOptions = {
+    origin: function (origin: string | undefined, callback: (error: Error | null, allow?: boolean) => void) {
+        console.log('Request origin:', origin);
         
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if (!origin) {
+            console.log('No origin, allowing request');
+            return callback(null, true);
+        }
+
         const allowedOrigins = [
             'http://localhost:3000',
             'https://future-funds.vercel.app'
         ];
-        
+
         // Allow all Vercel preview deployments
-        if(origin.includes('vercel.app')) {
+        if (origin.includes('vercel.app')) {
+            console.log('Vercel deployment detected, allowing request');
             return callback(null, true);
         }
 
-        if(allowedOrigins.indexOf(origin) === -1) {
+        if (allowedOrigins.includes(origin)) {
+            console.log('Origin in allowed list, allowing request');
             return callback(null, true);
         }
-        
+
+        console.log('Origin not in allowed list, but allowing for development');
         return callback(null, true);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
-}));
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+};
 
+app.use(cors(corsOptions));
 app.use(express.json());
 
-// Enable pre-flight requests for all routes
-app.options('*', cors());
+// Error handling middleware
+app.use((err: any, req: express.Request, res: express.Response, next: express.NextFunction) => {
+    console.error('Error:', err);
+    res.status(err.status || 500).json({
+        message: err.message || 'Internal Server Error',
+        stack: process.env.NODE_ENV === 'development' ? err.stack : undefined
+    });
+});
 
 // Routes
 app.use('/api/auth', authRoutes);

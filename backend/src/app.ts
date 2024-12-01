@@ -4,7 +4,6 @@ import cors from 'cors';
 import authRoutes from './routes/auth';
 import stockRoutes from './routes/stocks';
 import { Request, Response } from 'express';
-
 declare module '@vercel/node';
 
 const app = express();

@@ -9,11 +9,25 @@ dotenv.config();
 const app = express();
 
 // Middleware
-app.use(cors());
+app.use(cors({
+    origin: [
+        'http://localhost:3000',
+        'https://future-funds.vercel.app',
+        'https://future-funds-git-main.vercel.app',
+        'https://future-funds-*.vercel.app'
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+}));
 app.use(express.json());
 
 // Routes
 app.use('/api/auth', authRoutes);
+
+// Test route
+app.get('/', (req, res) => {
+    res.json({ message: 'Backend API is running' });
+});
 
 // Connect to MongoDB
 mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost:27017/future-funds')

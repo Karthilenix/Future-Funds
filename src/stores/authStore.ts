@@ -21,11 +21,12 @@ export const useAuthStore = create<AuthState>()(
       isAuthenticated: false,
       login: async (email: string, password: string) => {
         try {
-          const response = await fetch(`${import.meta.env.VITE_API_URL}/auth/login`, {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
             },
+            credentials: 'include',
             body: JSON.stringify({ email, password }),
           });
 
@@ -39,12 +40,14 @@ export const useAuthStore = create<AuthState>()(
           localStorage.setItem('token', data.token);
           localStorage.setItem('user', JSON.stringify(data.user));
         } catch (error) {
+          console.error('Login error:', error);
           throw error;
         }
       },
       logout: () => {
         set({ token: null, user: null, isAuthenticated: false });
         localStorage.removeItem('token');
+        localStorage.removeItem('user');
       }
     }),
     {

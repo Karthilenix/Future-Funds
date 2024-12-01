@@ -2,12 +2,14 @@ import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { toast } from 'react-hot-toast';
 import { Lock, Mail, User } from 'lucide-react';
+import { useAuthStore } from '../stores/authStore';
 
 const Register = () => {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
+  const register = useAuthStore((state) => state.register);
 
   const validateEmail = (email: string) => {
     return email.toLowerCase() === email && email.includes('@');
@@ -27,23 +29,7 @@ const Register = () => {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/auth/register', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ username, email, password }),
-      });
-
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.message);
-      }
-
-      localStorage.setItem('token', data.token);
-      localStorage.setItem('userId', data.userId);
-
+      await register(username, email, password);
       toast.success('Registration successful!');
       navigate('/login');
     } catch (error) {

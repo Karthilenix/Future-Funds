@@ -10,6 +10,7 @@ interface AuthState {
   } | null;
   isAuthenticated: boolean;
   login: (email: string, password: string) => Promise<void>;
+  register: (username: string, email: string, password: string) => Promise<void>;
   logout: () => void;
 }
 
@@ -25,14 +26,14 @@ export const useAuthStore = create<AuthState>()(
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
+              'Accept': 'application/json',
             },
-            credentials: 'include',
             body: JSON.stringify({ email, password }),
           });
 
           if (!response.ok) {
-            const error = await response.json();
-            throw new Error(error.message || 'Login failed');
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Login failed');
           }
 
           const data = await response.json();
@@ -41,6 +42,31 @@ export const useAuthStore = create<AuthState>()(
           localStorage.setItem('user', JSON.stringify(data.user));
         } catch (error) {
           console.error('Login error:', error);
+          throw error;
+        }
+      },
+      register: async (username: string, email: string, password: string) => {
+        try {
+          const response = await fetch(`${import.meta.env.VITE_API_URL}/api/auth/register`, {
+            method: 'POST',
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
+            body: JSON.stringify({ username, email, password }),
+          });
+
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.message || 'Registration failed');
+          }
+
+          const data = await response.json();
+          set({ user: data.user, token: data.token, isAuthenticated: true });
+          localStorage.setItem('token', data.token);
+          localStorage.setItem('user', JSON.stringify(data.user));
+        } catch (error) {
+          console.error('Registration error:', error);
           throw error;
         }
       },

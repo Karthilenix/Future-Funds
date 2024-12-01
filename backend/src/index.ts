@@ -10,16 +10,35 @@ const app = express();
 
 // Middleware
 app.use(cors({
-    origin: [
-        'http://localhost:3000',
-        'https://future-funds.vercel.app',
-        'https://future-funds-git-main.vercel.app',
-        'https://future-funds-*.vercel.app'
-    ],
+    origin: function(origin, callback) {
+        // Allow requests with no origin (like mobile apps or curl requests)
+        if(!origin) return callback(null, true);
+        
+        const allowedOrigins = [
+            'http://localhost:3000',
+            'https://future-funds.vercel.app'
+        ];
+        
+        // Allow all Vercel preview deployments
+        if(origin.includes('vercel.app')) {
+            return callback(null, true);
+        }
+
+        if(allowedOrigins.indexOf(origin) === -1) {
+            return callback(null, true);
+        }
+        
+        return callback(null, true);
+    },
     credentials: true,
-    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS']
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With']
 }));
+
 app.use(express.json());
+
+// Enable pre-flight requests for all routes
+app.options('*', cors());
 
 // Routes
 app.use('/api/auth', authRoutes);

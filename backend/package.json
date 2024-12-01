@@ -22,7 +22,7 @@
     "@types/express-serve-static-core": "^4.17.41",
     "@types/jsonwebtoken": "^9.0.7",
     "@types/node": "^18.19.67",
-    "@vercel/node": "^3.0.0",
+    "@vercel/node": "^2.10.3",
     "ts-node-dev": "^2.0.0",
     "typescript": "^5.2.2"
   }

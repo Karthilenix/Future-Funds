@@ -11,6 +11,7 @@ const app = express();
 // Middleware for logging requests
 app.use((req, res, next) => {
     console.log(`${new Date().toISOString()} - ${req.method} ${req.path}`);
+    res.setHeader('Cache-Control', 'no-store');
     next();
 });
 
@@ -27,7 +28,7 @@ const corsOptions = {
 
         const allowedOrigins = [
             'http://localhost:3000',
-            'https://future-funds.vercel.app'
+            'https://futurefunds.vercel.app'
         ];
 
         // Allow all Vercel preview deployments

@@ -1,6 +1,7 @@
 import create from 'zustand';
 import { persist } from 'zustand/middleware';
 import api from '../utils/axios';
+import { API_CONFIG } from '../config/api';
 
 export interface Stock {
   symbol: string;
@@ -218,26 +219,22 @@ const sampleStocks: Stock[] = [
 export const useStockStore = create<StockState>()(
   persist(
     (set, get) => ({
-      stocks: sampleStocks,
+      stocks: [],
       userStocks: [],
       loading: false,
       error: null,
       totalInvestment: 0,
       
       fetchStocks: async () => {
+        set({ loading: true });
         try {
-          set({ loading: true, error: null });
-          
-          const { data } = await api.get<Stock[]>('/stocks');
-          set({ stocks: data, loading: false });
+          const response = await fetch(`${API_CONFIG.baseURL}/api/stocks`);
+          if (!response.ok) throw new Error('Failed to fetch stocks');
+          const data = await response.json();
+          set({ stocks: data, loading: false, error: null });
         } catch (error) {
+          set({ error: 'Failed to fetch stocks', loading: false });
           console.error('Error fetching stocks:', error);
-          // Fallback to sample stocks if API fails
-          set({ 
-            stocks: sampleStocks,
-            loading: false,
-            error: null
-          });
         }
       },
 

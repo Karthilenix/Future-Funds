@@ -11,7 +11,14 @@ const StockList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetchStocks();
+    const fetchData = () => {
+        fetchStocks();
+    };
+
+    fetchData(); // Initial fetch
+    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+
+    return () => clearInterval(interval); // Cleanup on unmount
   }, [fetchStocks]);
 
   const handleStockClick = (symbol: string) => {

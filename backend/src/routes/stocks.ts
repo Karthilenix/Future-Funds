@@ -3,38 +3,49 @@ import { auth } from '../middleware/auth';
 
 const router = express.Router();
 
-// Sample stock data (you can replace this with your database)
-const sampleStocks = [
+// Base stock data
+const baseStocks = [
     {
         symbol: 'AAPL',
         name: 'Apple Inc.',
-        price: 150.25,
-        changePercent: 1.2,
+        basePrice: 150.25,
         volume: 1000000,
     },
     {
         symbol: 'GOOGL',
         name: 'Alphabet Inc.',
-        price: 2750.80,
-        changePercent: -0.8,
+        basePrice: 2750.80,
         volume: 500000,
     },
     {
         symbol: 'MSFT',
         name: 'Microsoft Corporation',
-        price: 310.15,
-        changePercent: 0.5,
+        basePrice: 310.15,
         volume: 750000,
-    },
-    // Add more sample stocks as needed
+    }
 ];
+
+// Function to generate dynamic stock data
+const generateDynamicStocks = () => {
+    return baseStocks.map(stock => {
+        const priceChange = (Math.random() - 0.5) * 5; // Random price change between -2.5 and 2.5
+        const newPrice = stock.basePrice + priceChange;
+        const changePercent = (priceChange / stock.basePrice) * 100;
+        
+        return {
+            ...stock,
+            price: Number(newPrice.toFixed(2)),
+            changePercent: Number(changePercent.toFixed(2)),
+            volume: stock.volume + Math.floor(Math.random() * 100000)
+        };
+    });
+};
 
 // Get all stocks
 router.get('/', async (req: Request, res: Response) => {
     try {
-        // For now, return sample data
-        // In a real app, you would fetch this from a database
-        res.json(sampleStocks);
+        const dynamicStocks = generateDynamicStocks();
+        res.json(dynamicStocks);
     } catch (error) {
         console.error('Error fetching stocks:', error);
         res.status(500).json({ message: 'Error fetching stocks' });

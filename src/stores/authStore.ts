@@ -14,7 +14,7 @@ interface AuthState {
   logout: () => void;
 }
 
-const API_URL = import.meta.env.VITE_API_URL || 'https://futurefunds.vercel.app';
+const API_URL = import.meta.env.VITE_API_URL || 'https://future-funds-backend.onrender.com:10000';
 console.log('Current API URL:', API_URL); // Debug log
 
 export const useAuthStore = create<AuthState>()(

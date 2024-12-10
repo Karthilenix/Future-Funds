@@ -19,7 +19,7 @@ app.use((req, res, next) => {
 const allowedOrigins = [
     'http://localhost:3000',
     'https://futurefunds.vercel.app',
-    'https://futurefunds.vercel.app'
+    'https://future-funds.vercel.app'
 ];
 
 const corsOptions = {

@@ -11,9 +11,8 @@ const app = express();
 // Define allowed origins
 const allowedOrigins = [
     'http://localhost:3000',                    // Local development
-    'https://future-funds.vercel.app',          // Your production domain
-    'https://future-funds-git-main.vercel.app', // Vercel preview deployments
-    'https://future-funds-*.vercel.app'         // Vercel preview deployments
+    'https://futurefunds.vercel.app/',          // Your production domain // Vercel preview deployments
+    'https://vercel.com/karthikeyan-vs-projects-3e886dfb/futurefunds/3XtkViTgSh3tMrLF5ghQRe7MneML'         // Vercel preview deployments
 ];
 
 // Configure CORS

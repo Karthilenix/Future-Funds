@@ -3,62 +3,40 @@ import { auth } from '../middleware/auth';
 
 const router = express.Router();
 
-// Base stock data
-const baseStocks = [
+// Sample stock data (you can replace this with your database)
+const sampleStocks = [
     {
         symbol: 'AAPL',
         name: 'Apple Inc.',
-        basePrice: 150.25,
+        price: 150.25,
+        changePercent: 1.2,
         volume: 1000000,
-        marketCap: 2800000000000,
-        change: 0
     },
     {
         symbol: 'GOOGL',
         name: 'Alphabet Inc.',
-        basePrice: 2750.80,
+        price: 2750.80,
+        changePercent: -0.8,
         volume: 500000,
-        marketCap: 2000000000000,
-        change: 0
     },
     {
         symbol: 'MSFT',
         name: 'Microsoft Corporation',
-        basePrice: 310.15,
+        price: 310.15,
+        changePercent: 0.5,
         volume: 750000,
-        marketCap: 2500000000000,
-        change: 0
-    }
+    },
+    // Add more sample stocks as needed
 ];
-
-// Function to generate dynamic stock data
-const generateDynamicStocks = () => {
-    return baseStocks.map(stock => {
-        const priceChange = (Math.random() - 0.5) * 5; // Random price change between -2.5 and 2.5
-        const newPrice = stock.basePrice + priceChange;
-        const changePercent = (priceChange / stock.basePrice) * 100;
-        
-        return {
-            ...stock,
-            price: Number(newPrice.toFixed(2)),
-            change: Number(priceChange.toFixed(2)),
-            changePercent: Number(changePercent.toFixed(2)),
-            volume: stock.volume + Math.floor(Math.random() * 100000),
-            marketCap: stock.marketCap
-        };
-    });
-};
 
 // Get all stocks
 router.get('/', async (req: Request, res: Response) => {
     try {
-        const dynamicStocks = generateDynamicStocks();
-        res.header('Access-Control-Allow-Origin', '*');
-        res.header('Access-Control-Allow-Methods', 'GET');
-        res.header('Access-Control-Allow-Headers', 'Content-Type');
-        res.json(dynamicStocks);
+        // For now, return sample data
+        // In a real app, you would fetch this from a database
+        res.json(sampleStocks);
     } catch (error) {
-        console.error('Error generating stocks:', error);
+        console.error('Error fetching stocks:', error);
         res.status(500).json({ message: 'Error fetching stocks' });
     }
 });

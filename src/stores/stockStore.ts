@@ -228,13 +228,24 @@ export const useStockStore = create<StockState>()(
       fetchStocks: async () => {
         set({ loading: true });
         try {
-          const response = await fetch(`${API_CONFIG.baseURL}/api/stocks`);
-          if (!response.ok) throw new Error('Failed to fetch stocks');
+          const response = await fetch(`${API_CONFIG.baseURL}/api/stocks`, {
+            method: 'GET',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            mode: 'cors'
+          });
+          
+          if (!response.ok) {
+            throw new Error(`HTTP error! status: ${response.status}`);
+          }
+          
           const data = await response.json();
           set({ stocks: data, loading: false, error: null });
         } catch (error) {
-          set({ error: 'Failed to fetch stocks', loading: false });
           console.error('Error fetching stocks:', error);
+          set({ error: 'Failed to fetch stocks', loading: false });
         }
       },
 

@@ -11,12 +11,12 @@ const StockList = () => {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = () => {
-        fetchStocks();
+    const fetchData = async () => {
+        await fetchStocks();
     };
 
     fetchData(); // Initial fetch
-    const interval = setInterval(fetchData, 5000); // Fetch every 5 seconds
+    const interval = setInterval(fetchData, 10000); // Fetch every 10 seconds
 
     return () => clearInterval(interval); // Cleanup on unmount
   }, [fetchStocks]);

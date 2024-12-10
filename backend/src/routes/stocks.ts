@@ -53,6 +53,9 @@ const generateDynamicStocks = () => {
 router.get('/', async (req: Request, res: Response) => {
     try {
         const dynamicStocks = generateDynamicStocks();
+        res.header('Access-Control-Allow-Origin', '*');
+        res.header('Access-Control-Allow-Methods', 'GET');
+        res.header('Access-Control-Allow-Headers', 'Content-Type');
         res.json(dynamicStocks);
     } catch (error) {
         console.error('Error generating stocks:', error);

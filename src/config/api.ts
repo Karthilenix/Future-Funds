@@ -1,5 +1,5 @@
 export const API_CONFIG = {
-    baseURL: import.meta.env.VITE_API_URL || 'https://future-funds-backend.onrender.com:10000',
+    baseURL: import.meta.env.VITE_API_URL || 'https://future-funds-backend.onrender.com',
     endpoints: {
         auth: {
             login: '/api/auth/login',

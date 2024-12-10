@@ -11,7 +11,7 @@ export interface Stock {
   changePercent: number;
   volume: number;
   marketCap: number;
-  lastUpdate?: number;
+  basePrice?: number;
 }
 
 interface UserStock extends Stock {

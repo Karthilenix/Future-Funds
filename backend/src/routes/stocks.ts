@@ -10,18 +10,24 @@ const baseStocks = [
         name: 'Apple Inc.',
         basePrice: 150.25,
         volume: 1000000,
+        marketCap: 2800000000000,
+        change: 0
     },
     {
         symbol: 'GOOGL',
         name: 'Alphabet Inc.',
         basePrice: 2750.80,
         volume: 500000,
+        marketCap: 2000000000000,
+        change: 0
     },
     {
         symbol: 'MSFT',
         name: 'Microsoft Corporation',
         basePrice: 310.15,
         volume: 750000,
+        marketCap: 2500000000000,
+        change: 0
     }
 ];
 
@@ -35,8 +41,10 @@ const generateDynamicStocks = () => {
         return {
             ...stock,
             price: Number(newPrice.toFixed(2)),
+            change: Number(priceChange.toFixed(2)),
             changePercent: Number(changePercent.toFixed(2)),
-            volume: stock.volume + Math.floor(Math.random() * 100000)
+            volume: stock.volume + Math.floor(Math.random() * 100000),
+            marketCap: stock.marketCap
         };
     });
 };
@@ -47,7 +55,7 @@ router.get('/', async (req: Request, res: Response) => {
         const dynamicStocks = generateDynamicStocks();
         res.json(dynamicStocks);
     } catch (error) {
-        console.error('Error fetching stocks:', error);
+        console.error('Error generating stocks:', error);
         res.status(500).json({ message: 'Error fetching stocks' });
     }
 });

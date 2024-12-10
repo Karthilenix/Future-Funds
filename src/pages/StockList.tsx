@@ -6,13 +6,19 @@ import { useAuthStore } from '../stores/authStore';
 import { toast } from 'react-hot-toast';
 
 const StockList = () => {
-  const { stocks, loading, error, fetchStocks } = useStockStore();
+  const { stocks, loading, error, fetchStocks, updateStockPrices } = useStockStore();
   const { isAuthenticated } = useAuthStore();
   const navigate = useNavigate();
 
   useEffect(() => {
     fetchStocks();
-  }, [fetchStocks]);
+    // Update prices every 5 seconds
+    const interval = setInterval(() => {
+      updateStockPrices();
+    }, 5000);
+
+    return () => clearInterval(interval);
+  }, [fetchStocks, updateStockPrices]);
 
   const handleStockClick = (symbol: string) => {
     if (!isAuthenticated) {

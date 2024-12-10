@@ -223,17 +223,17 @@ export const useStockStore = create<StockState>()(
       loading: false,
       error: null,
       totalInvestment: 0,
-      
+
       fetchStocks: async () => {
         try {
           set({ loading: true, error: null });
-          
+
           const { data } = await api.get<Stock[]>('/stocks');
           set({ stocks: data, loading: false });
         } catch (error) {
           console.error('Error fetching stocks:', error);
           // Fallback to sample stocks if API fails
-          set({ 
+          set({
             stocks: sampleStocks,
             loading: false,
             error: null
@@ -242,14 +242,33 @@ export const useStockStore = create<StockState>()(
       },
 
       updateStockPrices: () => {
-        const updatedStocks = get().stocks.map(stock => ({
-          ...stock,
-          price: Number((stock.price * (1 + (Math.random() - 0.5) * 0.02)).toFixed(2)),
-          changePercent: Number((Math.random() - 0.5) * 5)
-        }));
+        const updatedStocks = get().stocks.map(stock => {
+          // Calculate a random percentage change between -2% and +2%
+          const maxChange = 0.02; // 2% maximum change
+          const randomChange = (Math.random() - 0.5) * 2 * maxChange;
+
+          // Calculate new price
+          const newPrice = Number((stock.price * (1 + randomChange)).toFixed(2));
+
+          // Calculate new change percentage (daily)
+          const newChangePercent = Number((randomChange * 100).toFixed(2));
+
+          // Calculate volume change (random 5-15% change)
+          const volumeChange = 1 + (Math.random() * 0.1 + 0.05) * (Math.random() > 0.5 ? 1 : -1);
+          const newVolume = Math.round(stock.volume * volumeChange);
+
+          return {
+            ...stock,
+            price: newPrice,
+            change: Number((newPrice - stock.price).toFixed(2)),
+            changePercent: newChangePercent,
+            volume: newVolume,
+            lastUpdate: Date.now()
+          };
+        });
         set({ stocks: updatedStocks });
       },
-      
+
       buyStock: async (symbol: string, shares: number) => {
         try {
           const stock = get().stocks.find(s => s.symbol === symbol);
@@ -264,15 +283,15 @@ export const useStockStore = create<StockState>()(
             // Update existing stock
             const totalShares = existingStock.shares + shares;
             const newAvgPrice = ((existingStock.avgBuyPrice * existingStock.shares) + (stock.price * shares)) / totalShares;
-            
-            updatedUserStocks = currentUserStocks.map(s => 
-              s.symbol === symbol 
-                ? { 
-                    ...s, 
-                    shares: totalShares, 
-                    avgBuyPrice: newAvgPrice,
-                    profit: (stock.price - newAvgPrice) * totalShares 
-                  }
+
+            updatedUserStocks = currentUserStocks.map(s =>
+              s.symbol === symbol
+                ? {
+                  ...s,
+                  shares: totalShares,
+                  avgBuyPrice: newAvgPrice,
+                  profit: (stock.price - newAvgPrice) * totalShares
+                }
                 : s
             );
           } else {
@@ -285,7 +304,7 @@ export const useStockStore = create<StockState>()(
             }];
           }
 
-          set(state => ({ 
+          set(state => ({
             userStocks: updatedUserStocks,
             totalInvestment: state.totalInvestment + purchaseAmount
           }));
@@ -301,7 +320,7 @@ export const useStockStore = create<StockState>()(
         try {
           const currentUserStocks = get().userStocks;
           const stockToSell = currentUserStocks.find(s => s.symbol === symbol);
-          
+
           if (!stockToSell) {
             throw new Error('Stock not found in portfolio');
           }

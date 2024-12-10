@@ -16,38 +16,23 @@ app.use((req, res, next) => {
 });
 
 // CORS configuration
+const allowedOrigins = [
+    'http://localhost:3000',
+    'https://futurefunds.vercel.app',
+    'https://futurefunds.vercel.app'
+];
+
 const corsOptions = {
     origin: function (origin: string | undefined, callback: (error: Error | null, allow?: boolean) => void) {
-        console.log('Request origin:', origin);
-        
-        // Allow requests with no origin (like mobile apps or curl requests)
-        if (!origin) {
-            console.log('No origin, allowing request');
-            return callback(null, true);
+        if (!origin || allowedOrigins.includes(origin)) {
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'));
         }
-
-        const allowedOrigins = [
-            'http://localhost:3000',
-            'https://futurefunds.vercel.app'
-        ];
-
-        // Allow all Vercel preview deployments
-        if (origin.includes('vercel.app')) {
-            console.log('Vercel deployment detected, allowing request');
-            return callback(null, true);
-        }
-
-        if (allowedOrigins.includes(origin)) {
-            console.log('Origin in allowed list, allowing request');
-            return callback(null, true);
-        }
-
-        console.log('Origin not in allowed list, but allowing for development');
-        return callback(null, true);
     },
     credentials: true,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With', 'Accept']
+    allowedHeaders: ['Content-Type', 'Authorization']
 };
 
 app.use(cors(corsOptions));

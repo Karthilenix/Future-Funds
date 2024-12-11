@@ -1,17 +1,19 @@
 import { Outlet } from 'react-router-dom';
 import Navbar from './components/Navbar';
+import Footer from './components/Footer';
 import { Toaster } from 'react-hot-toast';
 
-function App() {
+const App = () => {
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen flex flex-col">
       <Navbar />
-      <main className="container mx-auto px-4 py-8">
+      <main className="flex-grow container mx-auto px-4 py-8">
         <Outlet />
       </main>
+      <Footer />
       <Toaster position="top-right" />
     </div>
   );
-}
+};
 
 export default App;

@@ -1,4 +1,3 @@
-
 import { Link } from 'react-router-dom';
 import { TrendingUp, BookOpen, Newspaper, Phone, Mail, MapPin } from 'lucide-react';
 
@@ -20,7 +19,7 @@ const LearningResources = [
 
 const Footer = () => {
   return (
-    <footer className="bg-white border-t mt-20">
+    <footer className="bg-white border-t mt-auto">
       <div className="container mx-auto px-6 py-12">
         <div className="grid grid-cols-1 md:grid-cols-4 gap-12">
           {/* Company Info */}

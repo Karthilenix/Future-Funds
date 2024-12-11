@@ -103,6 +103,12 @@ const Register = () => {
             Sign in
           </Link>
         </p>
+        <button
+          onClick={() => navigate('/')}
+          className="w-full py-2 text-blue-600 hover:text-blue-800 transition-colors"
+          >
+            Return to Home
+          </button>
       </div>
     </div>
   );
